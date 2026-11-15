@@ -1,66 +1,52 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView
+)
+
+from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm
 
 
 # Lista de publicações
-def post_list(request):
-    posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'posts/post_list.html', {'posts': posts})
+class PostListView(ListView):
+    model = Post
+    template_name = 'posts/post_list.html'
+    context_object_name = 'posts'
+    ordering = ['-created_at']
 
 
 # Página individual de publicação
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    return render(request, 'posts/post_detail.html', {'post': post})
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'posts/post_detail.html'
+    context_object_name = 'post'
 
 
-# Criar publicação usando Django Forms
-def post_create(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-
-        if form.is_valid():
-            post = form.save()
-            return redirect('post_detail', pk=post.pk)
-
-    else:
-        form = PostForm()
-
-    return render(request, 'posts/post_form.html', {
-        'form': form,
-        'titulo': 'Criar publicação'
-    })
+# Criar publicação
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/post_form.html'
+    success_url = reverse_lazy('post_list')
+    extra_context = {'titulo': 'Criar publicação'}
 
 
-# Editar publicação usando Django Forms
-def post_update(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-
-    if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
-
-        if form.is_valid():
-            form.save()
-            return redirect('post_detail', pk=post.pk)
-
-    else:
-        form = PostForm(instance=post)
-
-    return render(request, 'posts/post_form.html', {
-        'form': form,
-        'titulo': 'Editar publicação'
-    })
+# Editar publicação
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/post_form.html'
+    success_url = reverse_lazy('post_list')
+    extra_context = {'titulo': 'Editar publicação'}
 
 
 # Excluir publicação
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-
-    if request.method == 'POST':
-        post.delete()
-        return redirect('post_list')
-
-    return render(request, 'posts/post_confirm_delete.html', {
-        'post': post
-    })
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'posts/post_confirm_delete.html'
+    context_object_name = 'post'
+    success_url = reverse_lazy('post_list')
