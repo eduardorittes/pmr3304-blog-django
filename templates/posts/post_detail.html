@@ -4,7 +4,10 @@
 
 <h2>{{ post.title }}</h2>
 
-<p>Publicado em: {{ post.created_at|date:"d/m/Y H:i" }}</p>
+<p>
+    Publicado em:
+    {{ post.created_at|date:"d/m/Y H:i" }}
+</p>
 
 <div>
     {{ post.content|safe }}
@@ -12,9 +15,29 @@
 
 <hr>
 
-<a href="{% url 'post_update' post.pk %}">Editar publicação</a>
+<h3>Categorias</h3>
 
-<a href="{% url 'post_delete' post.pk %}">Excluir publicação</a>
+{% for category in post.categories.all %}
+
+    <a href="{% url 'category_detail' category.pk %}">
+        {{ category.name }}
+    </a>
+
+{% empty %}
+
+    <p>Esta publicação não possui categorias.</p>
+
+{% endfor %}
+
+<hr>
+
+<a href="{% url 'post_update' post.pk %}">
+    Editar publicação
+</a>
+
+<a href="{% url 'post_delete' post.pk %}">
+    Excluir publicação
+</a>
 
 <br><br>
 
@@ -22,9 +45,11 @@
 
 <hr>
 
-<h3>Comentarios</h3>
+<h3>Comentários</h3>
 
-<a href="{% url 'comment_create' post.pk %}">Adicionar comentario</a>
+<a href="{% url 'comment_create' post.pk %}">
+    Adicionar comentário
+</a>
 
 <br><br>
 
@@ -41,7 +66,7 @@
 
 {% empty %}
 
-    <p>Esta publicacao ainda nao possui comentarios.</p>
+    <p>Esta publicação ainda não possui comentários.</p>
 
 {% endfor %}
 

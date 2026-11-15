@@ -6,24 +6,60 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDeleteView,
+    CategoryListView,
+    CategoryDetailView,
     comment_create
 )
 
+
 urlpatterns = [
-    path('', PostListView.as_view(), name='post_list'),
 
-    path('post/<int:pk>/',
-         PostDetailView.as_view(), name='post_detail'),
+    path(
+        '',
+        PostListView.as_view(),
+        name='post_list'
+    ),
 
-    path('novo/',
-         PostCreateView.as_view(), name='post_create'),
+    path(
+        'post/<int:pk>/',
+        PostDetailView.as_view(),
+        name='post_detail'
+    ),
 
-    path('post/<int:pk>/editar/',
-         PostUpdateView.as_view(), name='post_update'),
+    path(
+        'novo/',
+        PostCreateView.as_view(),
+        name='post_create'
+    ),
 
-    path('post/<int:pk>/excluir/',
-         PostDeleteView.as_view(), name='post_delete'),
+    path(
+        'post/<int:pk>/editar/',
+        PostUpdateView.as_view(),
+        name='post_update'
+    ),
 
-    path('post/<int:pk>/comentar/',
-         comment_create, name='comment_create'),
+    path(
+        'post/<int:pk>/excluir/',
+        PostDeleteView.as_view(),
+        name='post_delete'
+    ),
+
+    path(
+        'post/<int:pk>/comentar/',
+        comment_create,
+        name='comment_create'
+    ),
+
+    path(
+        'categorias/',
+        CategoryListView.as_view(),
+        name='category_list'
+    ),
+
+    path(
+        'categorias/<int:pk>/',
+        CategoryDetailView.as_view(),
+        name='category_detail'
+    ),
+
 ]

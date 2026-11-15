@@ -2,7 +2,18 @@
 
 {% block content %}
 
-<h2>Publicações</h2>
+{% if category %}
+
+    <h2>Categoria: {{ category.name }}</h2>
+
+    <p>{{ category.description }}</p>
+
+{% else %}
+
+    <h2>Publicações</h2>
+
+{% endif %}
+
 
 {% for post in posts %}
 
@@ -12,7 +23,10 @@
         </a>
     </h3>
 
-    <p>Publicado em: {{ post.created_at|date:"d/m/Y H:i" }}</p>
+    <p>
+        Publicado em:
+        {{ post.created_at|date:"d/m/Y H:i" }}
+    </p>
 
     <hr>
 

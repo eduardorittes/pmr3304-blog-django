@@ -8,6 +8,12 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
 
+    categories = models.ManyToManyField(
+        'Category',
+        related_name='posts',
+        blank=True
+    )
+
     def __str__(self):
         return self.title
 
@@ -33,3 +39,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comentario de {self.author.username}'
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name

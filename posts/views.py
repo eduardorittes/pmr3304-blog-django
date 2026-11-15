@@ -1,6 +1,3 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Comment
 from django.views.generic import (
     ListView,
     DetailView,
@@ -10,11 +7,15 @@ from django.views.generic import (
 )
 
 from django.urls import reverse_lazy
-from .models import Post
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+from .models import Post, Comment, Category
 from .forms import PostForm
 
 
-# Lista de publicações
+# LISTAGEM DE POSTS
+
 class PostListView(ListView):
     model = Post
     template_name = 'posts/post_list.html'
@@ -22,14 +23,16 @@ class PostListView(ListView):
     ordering = ['-created_at']
 
 
-# Página individual de publicação
+# DETALHES DO POST
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'posts/post_detail.html'
     context_object_name = 'post'
 
 
-# Criar publicação
+# CRIAR POST
+
 class PostCreateView(CreateView):
     model = Post
     form_class = PostForm
@@ -38,7 +41,8 @@ class PostCreateView(CreateView):
     extra_context = {'titulo': 'Criar publicação'}
 
 
-# Editar publicação
+# EDITAR POST
+
 class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm
@@ -47,19 +51,24 @@ class PostUpdateView(UpdateView):
     extra_context = {'titulo': 'Editar publicação'}
 
 
-# Excluir publicação
+# EXCLUIR POST
+
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'posts/post_confirm_delete.html'
     context_object_name = 'post'
     success_url = reverse_lazy('post_list')
 
-# Criar comentario
+
+# CRIAR COMENTARIO
+
 @login_required
 def comment_create(request, pk):
+
     post = get_object_or_404(Post, pk=pk)
 
     if request.method == 'POST':
+
         text = request.POST.get('text', '').strip()
 
         if text:
@@ -79,3 +88,28 @@ def comment_create(request, pk):
     return render(request, 'posts/comment_form.html', {
         'post': post
     })
+
+
+# LISTAGEM DE CATEGORIAS
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'posts/category_list.html'
+    context_object_name = 'categories'
+
+
+# POSTS DE UMA CATEGORIA
+
+class CategoryDetailView(DetailView):
+    model = Category
+    template_name = 'posts/post_list.html'
+    context_object_name = 'category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['posts'] = self.object.posts.all().order_by(
+            '-created_at'
+        )
+
+        return context
