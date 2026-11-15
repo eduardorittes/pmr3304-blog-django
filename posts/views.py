@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
+from .forms import PostForm
 
 
 # Lista de publicações
@@ -8,37 +9,46 @@ def post_list(request):
     return render(request, 'posts/post_list.html', {'posts': posts})
 
 
-# Página individual de uma publicação
+# Página individual de publicação
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'posts/post_detail.html', {'post': post})
 
 
-# Criar publicação
+# Criar publicação usando Django Forms
 def post_create(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
+        form = PostForm(request.POST)
 
-        Post.objects.create(title=title, content=content)
-        return redirect('post_list')
+        if form.is_valid():
+            post = form.save()
+            return redirect('post_detail', pk=post.pk)
 
-    return render(request, 'posts/post_form.html', {'titulo': 'Criar publicação'})
+    else:
+        form = PostForm()
+
+    return render(request, 'posts/post_form.html', {
+        'form': form,
+        'titulo': 'Criar publicação'
+    })
 
 
-# Editar publicação
+# Editar publicação usando Django Forms
 def post_update(request, pk):
     post = get_object_or_404(Post, pk=pk)
 
     if request.method == 'POST':
-        post.title = request.POST.get('title')
-        post.content = request.POST.get('content')
-        post.save()
+        form = PostForm(request.POST, instance=post)
 
-        return redirect('post_detail', pk=post.pk)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail', pk=post.pk)
+
+    else:
+        form = PostForm(instance=post)
 
     return render(request, 'posts/post_form.html', {
-        'post': post,
+        'form': form,
         'titulo': 'Editar publicação'
     })
 
@@ -51,4 +61,6 @@ def post_delete(request, pk):
         post.delete()
         return redirect('post_list')
 
-    return render(request, 'posts/post_confirm_delete.html', {'post': post})
+    return render(request, 'posts/post_confirm_delete.html', {
+        'post': post
+    })
