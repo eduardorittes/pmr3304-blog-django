@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Novo comentario</h2>
+
+<p>Publicacao: {{ post.title }}</p>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    {% if erro %}
+        <p>{{ erro }}</p>
+    {% endif %}
+
+    <label>Comentario:</label>
+
+    <textarea name="text" rows="5" required></textarea>
+
+    <button type="submit">Enviar comentario</button>
+
+</form>
+
+<br>
+
+<a href="{% url 'post_detail' post.pk %}">Voltar</a>
+
+{% endblock %}

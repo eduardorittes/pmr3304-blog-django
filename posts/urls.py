@@ -1,10 +1,12 @@
 from django.urls import path
+
 from .views import (
     PostListView,
     PostDetailView,
     PostCreateView,
     PostUpdateView,
-    PostDeleteView
+    PostDeleteView,
+    comment_create
 )
 
 urlpatterns = [
@@ -21,4 +23,7 @@ urlpatterns = [
 
     path('post/<int:pk>/excluir/',
          PostDeleteView.as_view(), name='post_delete'),
+
+    path('post/<int:pk>/comentar/',
+         comment_create, name='comment_create'),
 ]

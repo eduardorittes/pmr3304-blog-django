@@ -1,3 +1,6 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Comment
 from django.views.generic import (
     ListView,
     DetailView,
@@ -50,3 +53,29 @@ class PostDeleteView(DeleteView):
     template_name = 'posts/post_confirm_delete.html'
     context_object_name = 'post'
     success_url = reverse_lazy('post_list')
+
+# Criar comentario
+@login_required
+def comment_create(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    if request.method == 'POST':
+        text = request.POST.get('text', '').strip()
+
+        if text:
+            Comment.objects.create(
+                post=post,
+                author=request.user,
+                text=text
+            )
+
+            return redirect('post_detail', pk=post.pk)
+
+        return render(request, 'posts/comment_form.html', {
+            'post': post,
+            'erro': 'Digite um comentario antes de enviar.'
+        })
+
+    return render(request, 'posts/comment_form.html', {
+        'post': post
+    })

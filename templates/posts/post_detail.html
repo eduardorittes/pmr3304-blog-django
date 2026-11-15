@@ -20,4 +20,29 @@
 
 <a href="{% url 'post_list' %}">Voltar</a>
 
+<hr>
+
+<h3>Comentarios</h3>
+
+<a href="{% url 'comment_create' post.pk %}">Adicionar comentario</a>
+
+<br><br>
+
+{% for comment in post.comments.all %}
+
+    <p>
+        <strong>{{ comment.author.username }}</strong>
+        - {{ comment.created_at|date:"d/m/Y H:i" }}
+    </p>
+
+    <p>{{ comment.text|linebreaksbr }}</p>
+
+    <hr>
+
+{% empty %}
+
+    <p>Esta publicacao ainda nao possui comentarios.</p>
+
+{% endfor %}
+
 {% endblock %}

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Blog de Engenharia</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,6 +36,10 @@
             width: 350px;
             max-width: 100%;
         }
+
+        footer {
+            margin-top: 40px;
+        }
     </style>
 </head>
 
@@ -45,7 +50,28 @@
 
         <nav>
             <a href="{% url 'post_list' %}">Início</a>
+
             <a href="{% url 'post_create' %}">Nova publicação</a>
+
+            {% if user.is_authenticated %}
+
+                <span>Usuário: {{ user.username }}</span>
+
+                <form method="post"
+                      action="{% url 'logout' %}"
+                      style="display:inline;">
+
+                    {% csrf_token %}
+
+                    <button type="submit">Sair</button>
+
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'login' %}">Entrar</a>
+
+            {% endif %}
         </nav>
     </header>
 
