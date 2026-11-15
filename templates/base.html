@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Blog de Engenharia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: white;
+            color: black;
+        }
+
+        header {
+            border-bottom: 1px solid gray;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        a {
+            color: blue;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 5px 12px;
+            margin-top: 10px;
+        }
+
+        input, textarea {
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            width: 350px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Blog de Engenharia</h1>
+
+        <nav>
+            <a href="{% url 'post_list' %}">Início</a>
+            <a href="{% url 'post_create' %}">Nova publicação</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <hr>
+        <p>Projeto de laboratório - PMR3304</p>
+    </footer>
+
+</body>
+</html>

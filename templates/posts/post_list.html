@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Publicações</h2>
+
+{% for post in posts %}
+
+    <h3>
+        <a href="{% url 'post_detail' post.pk %}">
+            {{ post.title }}
+        </a>
+    </h3>
+
+    <p>Publicado em: {{ post.created_at|date:"d/m/Y H:i" }}</p>
+
+    <hr>
+
+{% empty %}
+
+    <p>Nenhuma publicação encontrada.</p>
+
+{% endfor %}
+
+{% endblock %}
